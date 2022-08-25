@@ -7,12 +7,13 @@ import {
   Typography,
   Avatar,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import uniqid from "uniqid";
-import { UserContext } from "./contexts/UserContext";
+import { UserContext, defaultUser } from "./contexts/UserContext";
 
 function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
   const userController = React.useContext(UserContext);
   const [pages, setPages] = React.useState<
     { name: string; path?: string; onClick?: () => void }[]
@@ -23,7 +24,7 @@ function Header() {
     },
   ]);
   useEffect(() => {
-    if (userController.user) {
+    if (userController.user !== defaultUser) {
       setPages([
         {
           name: "Home",
@@ -33,9 +34,9 @@ function Header() {
           name: "Logout",
           onClick: () => {
             if (userController && userController.user) {
-              localStorage.removeItem("jwt");
-              userController.setUser(null);
+              userController.setUser(defaultUser);
             }
+            localStorage.removeItem("user");
           },
         },
       ]);
@@ -61,7 +62,9 @@ function Header() {
     <AppBar position="sticky">
       <Container>
         <Typography variant="h6">
-          <Toolbar style={{ flex: "1", justifyContent: "flex-end", gap: '8px', }}>
+          <Toolbar
+            style={{ flex: "1", justifyContent: "flex-end", gap: "8px" }}
+          >
             <>
               {pages.map((page) => {
                 return (
@@ -78,8 +81,16 @@ function Header() {
                   </Button>
                 );
               })}
-              {userController.user && (
-                <Avatar>{userController.user.username[0]}</Avatar>
+              {userController.user !== defaultUser && (
+                <Avatar
+                  onClick={() => {
+                    if (userController && userController.user) {
+                      navigate("/user/" + userController.user._id);
+                    }
+                  }}
+                >
+                  {userController.user.username[0]}
+                </Avatar>
               )}
             </>
           </Toolbar>

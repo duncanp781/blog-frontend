@@ -1,34 +1,40 @@
 import Button from "@mui/material/Button";
-import React from "react";
-import { useJWT } from "./useJWT";
+import usePosts from "./hooks/usePosts";
+import PostsDisplay from "./PostsDisplay";
+import { useCallback, useContext } from "react";
+import { UserContext } from "./contexts/UserContext";
 
-interface Post{
+export interface Post {
   _id: string;
   title: string;
-  content: string,
-  author: string;
+  content: string;
+  public: boolean;
+  createdAt: string;
+  author: {
+    username: string;
+    _id: string;
+  };
 }
 
 const Home = () => {
-  const [posts, setPosts] = React.useState<Post[]>([]);
-  const jwt = useJWT();
-
-  React.useEffect(() => {
-    fetch("http://localhost:3000/api/posts", { mode: "cors" })
-      .then((res) => res.json())
-      .then((json) =>{ 
-        console.log(json);
-        setPosts(json)});
+  const userController = useContext(UserContext);
+  const getPosts = useCallback(() => {
+    return fetch("http://localhost:3000/api/posts", {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json());
   }, []);
+
+  const posts = usePosts(getPosts);
 
   return (
     <>
-      <Button variant="contained" href='/post'>Make a post</Button>
-      <div>
-        {posts.map((post) => (
-          <div key={post._id}>{post.title}</div>
-        ))}
-      </div>
+      <Button variant="contained" href="/post">
+        Make a post
+      </Button>
+      <PostsDisplay posts={posts} />
     </>
   );
 };

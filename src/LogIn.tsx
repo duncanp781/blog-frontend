@@ -35,7 +35,6 @@ function Login() {
         if (json) {
           //Set User in local storage
           userController.setUser(json);
-          console.log(json);
           //Set user object in local storage
           localStorage.setItem("user", JSON.stringify(json));
           navigate("/");

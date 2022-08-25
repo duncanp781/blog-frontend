@@ -6,6 +6,12 @@ export interface User {
   token: string;
 }
 
+export const defaultUser: User = {
+  username: '',
+  _id: '',
+  token: ''
+}
+
 export const UserContext = React.createContext<
-  {user: User | null, setUser: ((arg0: User | null) => void)}
->({user: null, setUser: () => {}});
+  {user: User, setUser: ((arg0: User) => void)}
+>({user: defaultUser, setUser: () => {}});
