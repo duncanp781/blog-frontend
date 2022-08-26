@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import usePosts from "./hooks/usePosts";
+import usePosts from "./hooks/useData";
 import PostsDisplay from "./PostsDisplay";
 import { useCallback, useContext } from "react";
 import { UserContext } from "./contexts/UserContext";

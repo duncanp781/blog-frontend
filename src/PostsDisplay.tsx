@@ -21,7 +21,7 @@ const PostContainer = styled.div`
 
 const PostInline = styled.div`
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: max-content max-content 1fr;
   grid-template-rows: 1fr 1fr;
   grid-gap: 10px;
   align-items: center;
@@ -47,7 +47,8 @@ function PostsDisplay({ posts }: Props) {
         <PostContainer key={post._id}>
           <PostInline>
             <Link to={"/post/" + post._id}>{post.title}</Link>
-            <span>by {post.author.username} {!post.public ? 'Not Published.' : ''} </span>
+            <Link to = {"/user/" + post.author._id}>by {post.author.username}</Link>
+            <span>{!post.public ? 'Not Published.' : ''} </span>
             <ElidedSubtext style = {{gridColumn: "1/-1"}}>{post.content}</ElidedSubtext>
           </PostInline>
         </PostContainer>

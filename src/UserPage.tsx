@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from "react";
 import { useParams } from "react-router-dom";
-import usePosts from "./hooks/usePosts";
+import useData from "./hooks/useData";
 import PostsDisplay from "./PostsDisplay";
 import { UserContext } from "./contexts/UserContext";
 
@@ -17,9 +17,30 @@ function UserPage() {
     }).then((res) => res.json());
   }, [id, userController.user.token]);
 
-  const posts = usePosts(getPosts);
+  const getUser = useCallback(() => {
+    return fetch("http://localhost:3000/api/user/" + id, {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        return [res];
+      });
+  }, [id]);
 
-  return <PostsDisplay posts={posts} />;
+  const posts = useData(getPosts);
+  const user = useData(getUser);
+
+  return (
+    <>
+      {user[0] ? <h1>{`Posts by ${user[0].username}`}</h1> : null}
+      <PostsDisplay posts={posts} />
+    </>
+  );
 }
 
 export default UserPage;

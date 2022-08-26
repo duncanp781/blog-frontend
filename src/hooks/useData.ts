@@ -1,14 +1,14 @@
 import {useState, useEffect} from 'react'
 
 //The get method should be wrapped in a useCallback hook to avoid unnecessary re-renders.
-const usePosts = (getMethod: () => Promise<any>) => {
-  const [posts, setPosts] = useState<any[]>([]);
+const useData = (getMethod: () => Promise<any[]>) => {
+  const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    getMethod().then(setPosts);
+    getMethod().then(setData);
   }, [getMethod]);
 
-  return posts;
+  return data;
 }
 
-export default usePosts
+export default useData

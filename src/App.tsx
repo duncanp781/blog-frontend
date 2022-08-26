@@ -34,7 +34,7 @@ function App() {
               <Route path="/login" element={<LogIn />} />
               <Route path="/post" element={<PostForm />} />
               <Route path="/post/:id" element={<PostPage />} />
-              <Route path="/user/:id/" element={<UserPage />} />
+              <Route path="/user/:id" element={<UserPage />} />
             </Routes>
           </Content>
         </Router>
