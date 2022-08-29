@@ -1,10 +1,5 @@
 import React from 'react'
-
-export interface User {
-  username: string;
-  _id: string;
-  token: string;
-}
+import { User } from '../types/User';
 
 export const defaultUser: User = {
   username: '',

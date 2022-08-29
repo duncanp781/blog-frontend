@@ -6,7 +6,8 @@ import LogIn from "./LogIn";
 import Header from "./Header";
 import { Page } from "./styled/page.styled";
 import {Content} from "./styled/content.styled";
-import { UserContext, User, defaultUser } from "./contexts/UserContext";
+import { UserContext, defaultUser } from "./contexts/UserContext";
+import { User } from "./types/User";
 import PostForm from "./PostForm";
 import PostPage from "./PostPage";
 import UserPage from "./UserPage";
@@ -33,6 +34,7 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<LogIn />} />
               <Route path="/post" element={<PostForm />} />
+              <Route path="/post/:id/update" element={<PostForm />} />
               <Route path="/post/:id" element={<PostPage />} />
               <Route path="/user/:id" element={<UserPage />} />
             </Routes>

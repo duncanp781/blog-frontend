@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Post } from "./Home";
+import { Post } from "./types/Post";
 import { Page } from "./styled/page.styled";
 import { useParams } from "react-router";
-import styled from "styled-components";
+import CommentDisplay from "./CommentDisplay";
+import { PostContent } from "./styled/postContent.styled";
+import { Link } from "react-router-dom";
+import { PostStyled } from "./styled/post.styled";
 
 function PostPage() {
   const { id } = useParams();
@@ -16,33 +19,25 @@ function PostPage() {
       });
   }, [id]);
 
-  const PostContent = styled.div`
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-    overflow-wrap: break-word;
-    max-width: 100%;
-  `;
-
-  const PostStyled = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: flex-start;
-    padding: 1rem;
-    width: 100%;
-  `
-
-
   return (
     <Page>
       {post ? (
-        <PostStyled>
-          <h1>{post.title}</h1>
-          <h2 style = {{marginLeft: 'auto'}}> {post.author.username}</h2>
-          <PostContent>{post.content}</PostContent>
-        </PostStyled>
+        <>
+          <PostStyled>
+            <h1>{post.title}</h1>
+            <h2 style={{ marginLeft: "auto" }}> {post.author.username}</h2>
+            <h2 style={{ marginLeft: "auto" }}>
+              {post.public ? "Published" : "Not Published"}
+            </h2>
+            <h3>
+              <Link to={'/post/' + post._id +'/update' } state={{ post }}>
+                Edit
+              </Link>
+            </h3>
+            <PostContent>{post.content}</PostContent>
+          </PostStyled>
+          <CommentDisplay />
+        </>
       ) : (
         <h1>Loading...</h1>
       )}

@@ -4,18 +4,6 @@ import PostsDisplay from "./PostsDisplay";
 import { useCallback, useContext } from "react";
 import { UserContext } from "./contexts/UserContext";
 
-export interface Post {
-  _id: string;
-  title: string;
-  content: string;
-  public: boolean;
-  createdAt: string;
-  author: {
-    username: string;
-    _id: string;
-  };
-}
-
 const Home = () => {
   const userController = useContext(UserContext);
   const getPosts = useCallback(() => {
