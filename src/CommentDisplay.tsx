@@ -6,6 +6,7 @@ import { UserContext } from "./contexts/UserContext";
 import PostsDisplay from "./PostsDisplay";
 import { PostInline } from "./styled/postInline.styled";
 import { PostContainer } from "./styled/postContainer.styled";
+import { Posts } from "./styled/posts.styled";
 
 function CommentDisplay() {
   const { id } = useParams();
@@ -19,6 +20,7 @@ function CommentDisplay() {
       }
     );
     const data = await response.json();
+    console.log(data);
     return data;
   }, [id]);
 
@@ -38,6 +40,7 @@ function CommentDisplay() {
         Authorization: `Bearer ${userController.user.token}`,
       },
     });
+    form.reset();
   };
 
   const comments = useData(getComments);
@@ -60,6 +63,7 @@ function CommentDisplay() {
       />
       <>
         <h3>Comments:</h3>
+        <Posts>
         {comments.map((comment) => {
           return (
             <PostContainer key = {comment._id}>
@@ -70,6 +74,7 @@ function CommentDisplay() {
             </PostContainer>
           );
         })}
+        </Posts>
       </>
     </>
   );

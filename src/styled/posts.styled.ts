@@ -5,4 +5,5 @@ export const Posts = styled.div`
   flex-direction: column;
   gap: 8px;
   height: 100%;
+  width: 100%;
 `;

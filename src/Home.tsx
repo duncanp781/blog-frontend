@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import usePosts from "./hooks/useData";
+import useData from "./hooks/useData";
 import PostsDisplay from "./PostsDisplay";
 import { useCallback, useContext } from "react";
 import { UserContext } from "./contexts/UserContext";
@@ -15,7 +15,7 @@ const Home = () => {
     }).then((res) => res.json());
   }, []);
 
-  const posts = usePosts(getPosts);
+  const posts = useData(getPosts);
 
   return (
     <>
