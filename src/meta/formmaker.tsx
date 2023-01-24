@@ -32,10 +32,26 @@ function FormMaker({ entries, title, onSubmit, children }: Props) {
       }, {} as EntriesObject)
     );
   }, [entries]);
+
+  const reset = () => {
+    setValues((prevValues: EntriesObject) =>
+      entries.reduce((acc, entry) => {
+        acc[entry.name] = "";
+        return acc;
+      }, {} as EntriesObject)
+    );
+  };
   return (
     <>
       <PageTitle>{title}</PageTitle>
-      <Form onSubmit={onSubmit} action="">
+      {/* Always reset form entries after submission. */}
+      <Form
+        onSubmit={(e) => {
+          onSubmit(e);
+          reset();
+        }}
+        action=""
+      >
         {entries.map((entry) => (
           <TextField
             key={entry.name}

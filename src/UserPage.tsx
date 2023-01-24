@@ -32,8 +32,8 @@ function UserPage() {
       });
   }, [id]);
 
-  const posts = useData(getPosts);
-  const user = useData(getUser);
+  const [posts, setPosts] = useData(getPosts);
+  const [user, setUser] = useData(getUser);
 
   return (
     <>

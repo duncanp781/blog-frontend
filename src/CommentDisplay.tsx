@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, FormEvent } from "react";
+import React, { useCallback, useContext, FormEvent, useState } from "react";
 import { useParams } from "react-router-dom";
 import useData from "./hooks/useData";
 import FormMaker from "./meta/formmaker";
@@ -7,6 +7,8 @@ import PostsDisplay from "./PostsDisplay";
 import { PostInline } from "./styled/postInline.styled";
 import { PostContainer } from "./styled/postContainer.styled";
 import { Posts } from "./styled/posts.styled";
+import { format, parseISO } from "date-fns";
+import uniqid from 'uniqid';
 
 function CommentDisplay() {
   const { id } = useParams();
@@ -20,7 +22,6 @@ function CommentDisplay() {
       }
     );
     const data = await response.json();
-    console.log(data);
     return data;
   }, [id]);
 
@@ -31,6 +32,13 @@ function CommentDisplay() {
     const body = {
       content: data.get("content") as string,
     };
+    const tempComment = {
+      content: data.get("content") as string,
+      createdAt: "Just Now",
+      user: userController.user,
+      _id: uniqid(),
+    };
+    setComments([...comments, tempComment]);
     fetch(`http://localhost:3000/api/post/${id}`, {
       method: "POST",
       body: JSON.stringify(body),
@@ -40,10 +48,9 @@ function CommentDisplay() {
         Authorization: `Bearer ${userController.user.token}`,
       },
     });
-    form.reset();
   };
 
-  const comments = useData(getComments);
+  const [comments, setComments] = useData(getComments);
 
   return (
     <>
@@ -64,16 +71,23 @@ function CommentDisplay() {
       <>
         <h3>Comments:</h3>
         <Posts>
-        {comments.map((comment) => {
-          return (
-            <PostContainer key = {comment._id}>
-              <div style = {{display: 'grid'}}>
-                <h3>{comment.user.username}</h3>
-                <p>{comment.content}</p>
-              </div>
-            </PostContainer>
-          );
-        })}
+          {comments.map((comment) => {
+            return (
+              <PostContainer key={comment._id}>
+                <div style={{ display: "grid" }}>
+                  <h3>
+                    {comment.user.username}{" "}
+                    <span>
+                      {comment.createdAt === "Just Now"
+                        ? "Just Now"
+                        : "on " + format(parseISO(comment.createdAt), "PP")}
+                    </span>
+                  </h3>
+                  <p>{comment.content}</p>
+                </div>
+              </PostContainer>
+            );
+          })}
         </Posts>
       </>
     </>

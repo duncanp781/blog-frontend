@@ -15,7 +15,7 @@ const Home = () => {
     }).then((res) => res.json());
   }, []);
 
-  const posts = useData(getPosts);
+  const [posts, setPosts] = useData(getPosts);
 
   return (
     <>
