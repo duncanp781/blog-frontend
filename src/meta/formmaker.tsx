@@ -3,6 +3,7 @@ import { Form } from "../styled/form.styled";
 import { PageTitle } from "../styled/pageTitle.styled";
 import { TextField, Button } from "@mui/material";
 
+// If include is not stated, we assume it is included.
 interface FormEntry {
   name: string;
   type: string;
@@ -11,6 +12,7 @@ interface FormEntry {
   minRows?: number;
   maxRows?: number;
   value?: string;
+  include?: boolean;
 }
 
 type Props = {
@@ -53,6 +55,7 @@ function FormMaker({ entries, title, onSubmit, children }: Props) {
         action=""
       >
         {entries.map((entry) => (
+          (entry.include === undefined || entry.include) ? 
           <TextField
             key={entry.name}
             label={entry.label}
@@ -69,7 +72,8 @@ function FormMaker({ entries, title, onSubmit, children }: Props) {
                 [entry.name]: e.target.value,
               }));
             }}
-          />
+          
+          /> : <></>
         ))}
         {children}
         <Button variant="contained" color="primary" type="submit">

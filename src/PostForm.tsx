@@ -5,14 +5,18 @@ import FormMaker from "./meta/formmaker";
 import { useNavigate, useLocation, useParams } from "react-router";
 import { Switch, FormControlLabel } from "@mui/material";
 import { Post } from "./types/Post";
+import MDEditor from "@uiw/react-md-editor";
 
 export default function PostForm() {
   const location = useLocation();
   const params = useParams();
+  // Check if we are updating a post - if the url is on a specific post, we are.
   const [isUpdate, setIsUpdate] = useState(!!params.id);
   const [post, setPost] = useState<Post | null>(null);
   const navigate = useNavigate();
   const userController = useContext(UserContext);
+  const [isMD, setIsMD] = useState(false);
+  const [MDContent, setMDContent] = useState("");
   //If isUpdate, fetch post from API
   useEffect(() => {
     if (isUpdate) {
@@ -85,15 +89,31 @@ export default function PostForm() {
           minRows: 5,
           maxRows: 10,
           value: post ? post.content : "",
+          include: !isMD,
         },
       ]}
       onSubmit={submit}
     >
       {
-        <FormControlLabel
-          control={<Switch name="public" defaultChecked />}
-          label="Post Publicly?"
-        />
+        <>
+          {isMD ? (
+            <MDEditor
+              value={MDContent}
+              onChange={setMDContent as any}
+            />
+          ) : (
+            <></>
+          )}
+          <FormControlLabel
+            control={<Switch name="markdown" />}
+            label="Post with Markdown?"
+            onChange={(e, checked) => setIsMD(checked)}
+          />
+          <FormControlLabel
+            control={<Switch name="public" defaultChecked />}
+            label="Post Publicly?"
+          />
+        </>
       }
     </FormMaker>
   );

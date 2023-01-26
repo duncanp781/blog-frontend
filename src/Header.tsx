@@ -83,6 +83,7 @@ function Header() {
               })}
               {userController.user !== defaultUser && (
                 <Avatar
+                style = {{cursor: "pointer"}}
                   onClick={() => {
                     if (userController && userController.user) {
                       navigate("/user/" + userController.user._id);

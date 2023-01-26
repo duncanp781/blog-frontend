@@ -12,6 +12,11 @@ import PostForm from "./PostForm";
 import PostPage from "./PostPage";
 import UserPage from "./UserPage";
 
+//TODO:
+//Revamp blog posting to be in markdown, or have the option to be. 
+//Add responding to comments
+//Make everything look nicer. 
+
 function App() {
   const [user, setUser] = React.useState<User>(defaultUser);
 
