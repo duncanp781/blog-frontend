@@ -1,22 +1,36 @@
 import React from "react";
 import { UserContext } from "./contexts/UserContext";
 import { useEffect, useState, useContext } from "react";
-import FormMaker from "./meta/formmaker";
 import { useNavigate, useLocation, useParams } from "react-router";
-import { Switch, FormControlLabel } from "@mui/material";
+import { Switch, FormControlLabel, TextField, Button } from "@mui/material";
 import { Post } from "./types/Post";
 import MDEditor from "@uiw/react-md-editor";
+import { Form } from "./styled/form.styled";
+import { PageTitle } from "./styled/pageTitle.styled";
 
 export default function PostForm() {
   const location = useLocation();
+  const navigate = useNavigate();
   const params = useParams();
+  const userController = useContext(UserContext);
+
   // Check if we are updating a post - if the url is on a specific post, we are.
   const [isUpdate, setIsUpdate] = useState(!!params.id);
+  //If there is a post, this is its information, otherwise null
   const [post, setPost] = useState<Post | null>(null);
-  const navigate = useNavigate();
-  const userController = useContext(UserContext);
+
+  const [title, setTitle] = useState<string>("");
+  const [body, setBody] = useState<string>("");
   const [isMD, setIsMD] = useState(false);
-  const [MDContent, setMDContent] = useState("");
+
+  // Want title and body to be the same as post if there is an update to it - i.e. if is update
+  useEffect(() => {
+    if(post){
+    setBody(post.content);
+    setTitle(post.title);
+    }
+  }, [post])
+
   //If isUpdate, fetch post from API
   useEffect(() => {
     if (isUpdate) {
@@ -33,10 +47,12 @@ export default function PostForm() {
     //Get form data
     const formData = new FormData(e.target as HTMLFormElement);
     const data = {
-      title: formData.get("title") as string,
-      content: formData.get("content") as string,
+      title: title,
+      content: body,
       public: formData.get("public") === "on",
+      isMD: formData.get("markdown") === "on",
     };
+    console.log(data);
     //Send data to server
     if (userController.user) {
       if (isUpdate) {
@@ -71,38 +87,36 @@ export default function PostForm() {
     }
   };
   return (
-    <FormMaker
-      title={isUpdate ? "Update Post" : "New Post"}
-      entries={[
-        {
-          name: "title",
-          type: "text",
-          label: "Title",
-          required: true,
-          value: post ? post.title : "",
-        },
-        {
-          name: "content",
-          type: "textarea",
-          label: "Body",
-          required: true,
-          minRows: 5,
-          maxRows: 10,
-          value: post ? post.content : "",
-          include: !isMD,
-        },
-      ]}
-      onSubmit={submit}
-    >
-      {
+    <>
+      <Form
+        onSubmit={(e) => {
+          submit(e);
+        }}
+        action=""
+      >
+        <PageTitle>{isUpdate ? "Update Post" : "New Post"}</PageTitle>
+        <TextField
+          key="title"
+          type="text"
+          label="Title"
+          required
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <>
           {isMD ? (
-            <MDEditor
-              value={MDContent}
-              onChange={setMDContent as any}
-            />
+            <MDEditor value={body} onChange={setBody as any} />
           ) : (
-            <></>
+            <TextField
+              key="content"
+              type="textarea"
+              label="Body"
+              required={true}
+              value={body}
+              minRows={5}
+              maxRows={10}
+              onChange={(e) => setBody(e.target.value)}
+            />
           )}
           <FormControlLabel
             control={<Switch name="markdown" />}
@@ -114,7 +128,10 @@ export default function PostForm() {
             label="Post Publicly?"
           />
         </>
-      }
-    </FormMaker>
+        <Button variant="contained" color="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
+    </>
   );
 }

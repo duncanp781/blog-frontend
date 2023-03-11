@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form } from "../styled/form.styled";
 import { PageTitle } from "../styled/pageTitle.styled";
 import { TextField, Button } from "@mui/material";
+import _ from "lodash";
 
 // If include is not stated, we assume it is included.
 interface FormEntry {
@@ -11,7 +12,7 @@ interface FormEntry {
   required: boolean;
   minRows?: number;
   maxRows?: number;
-  value?: string;
+  value?: string | null;
   include?: boolean;
 }
 
@@ -54,27 +55,28 @@ function FormMaker({ entries, title, onSubmit, children }: Props) {
         }}
         action=""
       >
-        {entries.map((entry) => (
-          (entry.include === undefined || entry.include) ? 
-          <TextField
-            key={entry.name}
-            label={entry.label}
-            name={entry.name}
-            required={entry.required}
-            type={entry.type}
-            multiline={entry.type === "textarea"}
-            minRows={entry.minRows}
-            maxRows={entry.maxRows}
-            value={values[entry.name] || ""}
-            onChange={(e) => {
-              setValues((prevValues) => ({
-                ...prevValues,
-                [entry.name]: e.target.value,
-              }));
-            }}
-          
-          /> : <></>
-        ))}
+        {entries.map(
+          (entry) =>
+            (entry.include === undefined || entry.include) && (
+              <TextField
+                key={entry.name}
+                label={entry.label}
+                name={entry.name}
+                required={entry.required}
+                type={entry.type}
+                multiline={entry.type === "textarea"}
+                minRows={entry.minRows}
+                maxRows={entry.maxRows}
+                value={values[entry.name] || ""}
+                onChange={(e) => {
+                  setValues((prevValues) => ({
+                    ...prevValues,
+                    [entry.name]: e.target.value,
+                  }));
+                }}
+              />
+            )
+        )}
         {children}
         <Button variant="contained" color="primary" type="submit">
           Submit

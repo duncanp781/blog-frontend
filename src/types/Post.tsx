@@ -5,6 +5,7 @@ export interface Post {
   content: string;
   public: boolean;
   createdAt: string;
+  isMD?: boolean,
   author: {
     username: string;
     _id: string;

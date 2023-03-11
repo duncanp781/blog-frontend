@@ -7,6 +7,7 @@ import { PostContent } from "./styled/postContent.styled";
 import { Link } from "react-router-dom";
 import { PostStyled } from "./styled/post.styled";
 import { UserContext } from "./contexts/UserContext";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 function PostPage() {
   const { id } = useParams();
@@ -34,14 +35,20 @@ function PostPage() {
                 <h2 style={{ marginLeft: "auto" }}>
                   {post.public ? "Published" : "Not Published"}
                 </h2>
-                <h3 style = {{marginLeft: "auto"}}>
+                <h3 style={{ marginLeft: "auto" }}>
                   <Link to={"/post/" + post._id + "/update"} state={{ post }}>
                     Edit
                   </Link>
                 </h3>{" "}
               </>
             ) : null}
-            <PostContent>{post.content}</PostContent>
+            <>
+              {post.isMD ? (
+                <ReactMarkdown>{post.content}</ReactMarkdown>
+              ) : (
+                <PostContent>{post.content}</PostContent>
+              )}
+            </>
           </PostStyled>
           <CommentDisplay />
         </>
