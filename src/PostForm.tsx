@@ -5,6 +5,7 @@ import { useNavigate, useLocation, useParams } from "react-router";
 import { Switch, FormControlLabel, TextField, Button } from "@mui/material";
 import { Post } from "./types/Post";
 import MDEditor from "@uiw/react-md-editor";
+import rehypeSanitize from "rehype-sanitize";
 import { Form } from "./styled/form.styled";
 import { PageTitle } from "./styled/pageTitle.styled";
 
@@ -25,11 +26,11 @@ export default function PostForm() {
 
   // Want title and body to be the same as post if there is an update to it - i.e. if is update
   useEffect(() => {
-    if(post){
-    setBody(post.content);
-    setTitle(post.title);
+    if (post) {
+      setBody(post.content);
+      setTitle(post.title);
     }
-  }, [post])
+  }, [post]);
 
   //If isUpdate, fetch post from API
   useEffect(() => {
@@ -105,7 +106,11 @@ export default function PostForm() {
         />
         <>
           {isMD ? (
-            <MDEditor value={body} onChange={setBody as any} />
+            <MDEditor
+              value={body}
+              onChange={setBody as any}
+              previewOptions={{ rehypePlugins: [[rehypeSanitize]] }}
+            />
           ) : (
             <TextField
               key="content"
