@@ -90,9 +90,7 @@ export default function PostForm() {
   return (
     <>
       <Form
-        onSubmit={(e) => {
-          submit(e);
-        }}
+        onSubmit={submit}
         action=""
       >
         <PageTitle>{isUpdate ? "Update Post" : "New Post"}</PageTitle>

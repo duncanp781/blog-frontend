@@ -1,18 +1,19 @@
-import React, { useCallback, useContext, FormEvent, useState } from "react";
+import { useCallback, useContext, FormEvent, useState } from "react";
 import { useParams } from "react-router-dom";
 import useData from "./hooks/useData";
-import FormMaker from "./meta/formmaker";
 import { UserContext } from "./contexts/UserContext";
-import PostsDisplay from "./PostsDisplay";
-import { PostInline } from "./styled/postInline.styled";
 import { PostContainer } from "./styled/postContainer.styled";
 import { Posts } from "./styled/posts.styled";
 import { format, parseISO } from "date-fns";
 import uniqid from 'uniqid';
+import { Form } from "./styled/form.styled";
+import { PageTitle } from "./styled/pageTitle.styled";
+import { Button, TextField } from "@mui/material";
 
 function CommentDisplay() {
   const { id } = useParams();
   const userController = useContext(UserContext);
+  const [comment, setComment] = useState("");
 
   const getComments = useCallback(async () => {
     const response = await fetch(
@@ -27,13 +28,13 @@ function CommentDisplay() {
 
   const submitComment = (e: FormEvent<Element>) => {
     e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const data = new FormData(form);
+    // const form = e.target as HTMLFormElement;
+    // const data = new FormData(form);
     const body = {
-      content: data.get("content") as string,
+      content: comment,
     };
     const tempComment = {
-      content: data.get("content") as string,
+      content: comment,
       createdAt: "Just Now",
       user: userController.user,
       _id: uniqid(),
@@ -54,20 +55,22 @@ function CommentDisplay() {
 
   return (
     <>
-      <FormMaker
-        title="Add a comment"
-        entries={[
-          {
-            name: "content",
-            type: "textarea",
-            label: "Comment",
-            required: true,
-            minRows: 5,
-            maxRows: 10,
-          },
-        ]}
+      <Form
         onSubmit={submitComment}
-      />
+        action="">
+          <PageTitle>Add A Comment</PageTitle>
+          <TextField
+            key="content"
+            type="textarea"
+            label="Comment"
+            required={true}
+            value={comment}
+            onChange={(e)=>{setComment(e.target.value)}}
+            />
+            <Button variant="contained" color="primary" type="submit">
+          Submit
+        </Button>
+        </Form>
       <>
         <h3>Comments:</h3>
         <Posts>

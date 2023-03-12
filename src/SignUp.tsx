@@ -1,22 +1,25 @@
-import React, { FormEvent, FormEventHandler } from "react";
-import { Alert } from "@mui/material";
+import React, { FormEvent, FormEventHandler, useState } from "react";
+import { Alert, Button, TextField } from "@mui/material";
 import { Card } from "./styled/card.styled";
 import { useNavigate } from "react-router-dom";
-import FormMaker from "./meta/formmaker";
+import { Form } from "./styled/form.styled";
+import { PageTitle } from "./styled/pageTitle.styled";
 
 function SignUp() {
   const [error, setError] = React.useState<string | null>(null);
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const signUp = (e: FormEvent) => {
     e.preventDefault();
     //Get form data
-    const formData = new FormData(e.target as HTMLFormElement);
     const data = {
-      username: formData.get("username"),
-      password: formData.get("password"),
+      username: username,
+      password: password,
     };
-    if (formData.get("password") !== formData.get("confirmPassword")) {
+    if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
@@ -32,7 +35,7 @@ function SignUp() {
           setError(json.message);
           return;
         }
-        //Set User in local storage
+        //If no error, then JSON is the token. Set User in local storage
         localStorage.setItem("user", JSON.stringify(json));
         navigate("/");
       });
@@ -40,30 +43,37 @@ function SignUp() {
 
   return (
     <Card>
-      <FormMaker
-        onSubmit={signUp}
-        title="Sign Up"
-        entries={[
-          {
-            name: "username",
-            type: "text",
-            label: "Username",
-            required: true,
-          },
-          {
-            name: "password",
-            type: "password",
-            label: "Password",
-            required: true,
-          },
-          {
-            name: "confirmPassword",
-            type: "password",
-            label: "Confirm Password",
-            required: true,
-          },
-        ]}
-      />
+      <Form onSubmit={signUp} action="">
+        <PageTitle>Sign Up</PageTitle>
+        <TextField
+          key="username"
+          type="text"
+          label="Username"
+          required
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          key="password"
+          type="text"
+          label="Password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <TextField
+          key="confirmPassword"
+          type="text"
+          label="Confirm Password"
+          required
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <Button variant="contained" color="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
+     
       {error && <Alert severity="error">{error}</Alert>}
     </Card>
   );
