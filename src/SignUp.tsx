@@ -26,7 +26,7 @@ function SignUp() {
     //Send data to server
     fetch("http://localhost:3000/api/signup", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json"},
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
